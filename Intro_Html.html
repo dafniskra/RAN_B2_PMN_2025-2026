@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan de Cours Interactif - Introduction au HTML</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Creams -->
+    <!-- Application Structure Plan: This single-page application is designed for an introductory HTML course. It uses a warm, engaging color palette. The structure includes a header with the school logo, a clear statement of learning objectives, and a main two-column layout. The left column provides sticky navigation for the course modules, while the right column dynamically displays the content for the selected module. Each module contains explanations and commented HTML code examples. The final module includes a simple interactive demonstration of CSS styling. The application concludes with a donut chart for the grading policy. This design facilitates easy and structured learning for beginners. -->
+    <!-- Visualization & Content Choices:
+        - Course Modules -> Goal: Organize/Inform -> Viz: Vertical Tab Navigation -> Interaction: Click to display module content -> Justification: Allows students to easily navigate the course syllabus without linear scrolling.
+        - HTML Code Examples -> Goal: Explain -> Viz: Styled code blocks -> Interaction: None -> Justification: Provides clear, readable examples of HTML syntax for core concepts.
+        - CSS Interaction Demo -> Goal: Demonstrate -> Viz: HTML elements and a button -> Interaction: Click to apply CSS styles -> Justification: Visually shows the relationship between HTML structure and CSS styling in a simple, hands-on way.
+        - Evaluation Methods -> Goal: Inform -> Viz: Donut Chart -> Interaction: Hover for details -> Justification: Gives a quick, understandable breakdown of the course assessment.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fcf8f3;
+            color: #44403c;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-item {
+            transition: all 0.2s ease-in-out;
+            border-left-width: 4px;
+            border-color: transparent;
+        }
+        .nav-item.active {
+            background-color: #fee2d5;
+            border-color: #f97316;
+            color: #9a3412;
+            font-weight: 600;
+        }
+        .nav-item:hover {
+            background-color: #fbeee9;
+            border-color: #fdbf9e;
+        }
+        .content-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 2rem;
+            border: 1px solid #e5e5e5;
+        }
+        .module-content ul {
+            list-style-position: inside;
+            padding-left: 0.5rem;
+        }
+        .module-content ul li {
+            margin-bottom: 0.75rem;
+        }
+        .code-block {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            margin-top: 1rem;
+            white-space: pre;
+        }
+        .code-block .tag { color: #f87171; }
+        .code-block .attr { color: #60a5fa; }
+        .code-block .string { color: #fcd34d; }
+        .code-block .comment { color: #9ca3af; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <header class="text-center mb-12">
+            <img src="https://www.ecole-pmn.fr/wp-content/uploads/2025/02/Logo_PMN_NOIR_RVB-1.webp" alt="Logo de l'école" class="mx-auto h-20 w-auto mb-6" onerror="this.onerror=null;this.src='https://placehold.co/200x80/fcf8f3/44403c?text=Logo';">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-800 tracking-tight">Introduction au HTML</h1>
+            <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Apprenez à construire la structure de base de n'importe quel site web avec le langage fondamental du web.</p>
+        </header>
+
+        <main>
+            <section id="course-overview" class="mb-16">
+                <div class="content-card">
+                    <h2 class="text-2xl font-bold mb-4 text-orange-600">Objectifs Généraux du Cours</h2>
+                    <p class="mb-6 text-gray-700">Ce cours est une introduction au HyperText Markup Language (HTML). L'objectif est de vous rendre capable de créer des pages web bien structurées, en comprenant le rôle de chaque balise pour donner du sens au contenu.</p>
+                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-gray-800">
+                        <li class="flex items-start"><span class="text-orange-500 font-bold text-2xl mr-3 mt-[-4px]">✓</span><span>Comprendre la structure d'un document HTML.</span></li>
+                        <li class="flex items-start"><span class="text-orange-500 font-bold text-2xl mr-3 mt-[-4px]">✓</span><span>Utiliser les balises essentielles pour le texte, les liens et les images.</span></li>
+                        <li class="flex items-start"><span class="text-orange-500 font-bold text-2xl mr-3 mt-[-4px]">✓</span><span>Créer des tableaux et des formulaires simples.</span></li>
+                        <li class="flex items-start"><span class="text-orange-500 font-bold text-2xl mr-3 mt-[-4px]">✓</span><span>Structurer une page avec des balises sémantiques.</span></li>
+                        <li class="flex items-start"><span class="text-orange-500 font-bold text-2xl mr-3 mt-[-4px]">✓</span><span>Faire le lien entre HTML pour la structure et CSS pour le style.</span></li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="modules-explorer">
+                <h2 class="text-3xl font-bold text-center mb-8 text-slate-800">Explorateur des Modules</h2>
+                <div class="flex flex-col md:flex-row gap-8">
+                    <nav class="md:w-1/4">
+                        <ul id="module-nav" class="space-y-2 sticky top-8">
+                        </ul>
+                    </nav>
+                    <div id="module-content-area" class="md:w-3/4 min-h-[500px]">
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const courseData = {
+            modules: [
+                {
+                    id: 'module1',
+                    title: 'Module 1: Structure de Base',
+                    weeks: ' ',
+                    objectives: [
+                        "Comprendre ce qu'est le HTML et son rôle.",
+                        "Connaître la structure minimale d'une page HTML.",
+                        "Écrire sa première page web."
+                    ],
+                    content: `
+                        <p class="mb-4">Ce premier module vous apprend les fondations du HTML. Nous allons découvrir ce qu'est une balise, un attribut, et comment assembler ces éléments pour créer la structure de base de n'importe quelle page web.</p>
+                        <h4 class="font-semibold text-lg mb-2 text-gray-700">Contenu Détaillé:</h4>
+                        <ul class="list-disc">
+                            <li><b>Anatomie d'une balise</b>: Balise ouvrante, fermante, contenu et attributs.</li>
+                            <li><b>Structure de base</b>: Les balises \`<!DOCTYPE html>\`, \`<html>\`, \`head>\` et \`<body>\`.</li>
+                            <li><b>Dans l'en-tête (\`<head>\`)</b>: Les balises \`<title>\` et \`<meta>\`.</li>
+                        </ul>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple : Votre première page HTML</h4>
+                        <div class="code-block"><span class="comment">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html <span class="attr">lang=</span><span class="string">"fr"</span>&gt;</span>
+  <span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta <span class="attr">charset=</span><span class="string">"UTF-8"</span>&gt;</span>
+    <span class="tag">&lt;title&gt;</span>Ma Première Page<span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;/head&gt;</span>
+  <span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;h1&gt;</span>Bonjour le monde !<span class="tag">&lt;/h1&gt;</span>
+    <span class="tag">&lt;p&gt;</span>Ceci est mon premier paragraphe.<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></div>
+                    `
+                },
+                {
+                    id: 'module2',
+                    title: 'Module 2: Contenu Textuel',
+                    weeks: ' ',
+                    objectives: [
+                        "Structurer le texte avec des titres et des paragraphes.",
+                        "Créer des listes ordonnées et non ordonnées.",
+                        "Mettre en évidence du texte (gras, italique)."
+                    ],
+                    content: `
+                        <p class="mb-4">Le HTML sert avant tout à structurer du contenu. Dans ce module, nous allons explorer les balises les plus courantes pour organiser et formater du texte, comme les titres, les paragraphes et les listes.</p>
+                        <h4 class="font-semibold text-lg mb-2 text-gray-700">Contenu Détaillé:</h4>
+                        <ul class="list-disc">
+                            <li><b>Titres</b>: De \`<h1>\` (le plus important) à \`<h6>\`.</li>
+                            <li><b>Paragraphes</b>: La balise \`<p>\`.</li>
+                            <li><b>Listes</b>: Non ordonnées (\`<ul>\`), ordonnées (\`<ol>\`) et éléments de liste (\`<li>\`).</li>
+                            <li><b>Mise en forme sémantique</b>: \`<strong>\` pour l'importance et \`<em>\` pour l'emphase.</li>
+                        </ul>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple : Un article structuré</h4>
+                        <div class="code-block"><span class="tag">&lt;h1&gt;</span>Le Titre de mon Article<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;p&gt;</span>Ceci est le paragraphe d'introduction. Il explique de quoi parle l'article. Il est <span class="tag">&lt;strong&gt;</span>très important<span class="tag">&lt;/strong&gt;</span> de bien commencer.<span class="tag">&lt;/p&gt;</span>
+
+<span class="tag">&lt;h2&gt;</span>Sous-titre 1<span class="tag">&lt;/h2&gt;</span>
+<span class="tag">&lt;p&gt;</span>Un autre paragraphe, qui détaille le premier point. On peut aussi mettre du texte en <span class="tag">&lt;em&gt;</span>italique<span class="tag">&lt;/em&gt;</span> pour insister.<span class="tag">&lt;/p&gt;</span>
+
+<span class="tag">&lt;h2&gt;</span>Liste des points clés<span class="tag">&lt;/h2&gt;</span>
+<span class="tag">&lt;ul&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Premier point<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Deuxième point<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Troisième point<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span></div>
+                    `
+                },
+                {
+                    id: 'module3',
+                    title: 'Module 3: Liens & Images',
+                    weeks: ' ',
+                    objectives: [
+                        "Créer des liens hypertextes vers d'autres pages.",
+                        "Insérer des images dans une page web.",
+                        "Comprendre les attributs essentiels comme `href`, `src` et `alt`."
+                    ],
+                    content: `
+                        <p class="mb-4">Le web est fait de liens ! Ce module vous apprend à connecter vos pages entre elles et avec le reste du monde. Nous verrons aussi comment enrichir vos pages avec des images.</p>
+                        <h4 class="font-semibold text-lg mb-2 text-gray-700">Contenu Détaillé:</h4>
+                        <ul class="list-disc">
+                            <li><b>La balise \`<a>\`</b>: Créer des liens.</li>
+                            <li><b>L'attribut \`href\`</b>: Spécifier la destination du lien.</li>
+                            <li><b>L'attribut \`target="_blank"\`</b>: Ouvrir un lien dans un nouvel onglet.</li>
+                            <li><b>La balise \`<img>\`</b>: Afficher une image.</li>
+                            <li><b>Les attributs \`src\` et \`alt\`</b>: Source de l'image et texte alternatif (essentiel pour l'accessibilité).</li>
+                        </ul>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple : Un lien et une image</h4>
+                        <div class="code-block"><span class="comment">&lt;!-- Un lien vers un autre site --&gt;</span>
+<span class="tag">&lt;p&gt;</span>Visitez le site de l'école en cliquant sur ce <span class="tag">&lt;a <span class="attr">href=</span><span class="string">"https://www.ecole-pmn.fr/"</span> <span class="attr">target=</span><span class="string">"_blank"</span>&gt;</span>lien<span class="tag">&lt;/a&gt;</span>.<span class="tag">&lt;/p&gt;</span>
+
+<span class="comment">&lt;!-- Une image affichée sur la page --&gt;</span>
+<span class="tag">&lt;img <span class="attr">src=</span><span class="string">"https://placehold.co/400x200/fee2d5/9a3412?text=Mon+Image"</span> <span class="attr">alt=</span><span class="string">"Description de l'image pour l'accessibilité"</span>&gt;</span></div>
+                    `
+                },
+                {
+                    id: 'module4',
+                    title: 'Module 4: Tableaux & Formulaires',
+                    weeks: ' ',
+                    objectives: [
+                        "Organiser des données sous forme de tableau.",
+                        "Créer un formulaire simple pour la saisie utilisateur.",
+                        "Utiliser différentes types de champs de formulaire."
+                    ],
+                    content: `
+                        <p class="mb-4">Dans ce module, nous abordons deux types de structures plus complexes : les tableaux pour afficher des données organisées en lignes et colonnes, et les formulaires pour permettre aux utilisateurs de vous envoyer des informations.</p>
+                        <h4 class="font-semibold text-lg mb-2 text-gray-700">Contenu Détaillé:</h4>
+                        <ul class="list-disc">
+                            <li><b>Tableaux</b>: \`<table>\`, \`<tr>\` (ligne), \`<th>\` (en-tête), \`<td>\` (cellule).</li>
+                            <li><b>Formulaires</b>: La balise \`<form>\`.</li>
+                            <li><b>Champs de saisie</b>: \`<input>\` (types: text, email, password, etc.).</li>
+                            <li><b>Étiquettes</b>: La balise \`<label>\` pour l'accessibilité.</li>
+                            <li><b>Boutons</b>: \`<button type="submit">\`.</li>
+                        </ul>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple : Un formulaire de contact simple</h4>
+                        <div class="code-block"><span class="tag">&lt;form&gt;</span>
+  <span class="tag">&lt;label <span class="attr">for=</span><span class="string">"nom"</span>&gt;</span>Votre nom :<span class="tag">&lt;/label&gt;</span><span class="tag">&lt;br&gt;</span>
+  <span class="tag">&lt;input <span class="attr">type=</span><span class="string">"text"</span> <span class="attr">id=</span><span class="string">"nom"</span> <span class="attr">name=</span><span class="string">"nom"</span>&gt;</span><span class="tag">&lt;br&gt;</span><span class="tag">&lt;br&gt;</span>
+
+  <span class="tag">&lt;label <span class="attr">for=</span><span class="string">"email"</span>&gt;</span>Votre email :<span class="tag">&lt;/label&gt;</span><span class="tag">&lt;br&gt;</span>
+  <span class="tag">&lt;input <span class="attr">type=</span><span class="string">"email"</span> <span class="attr">id=</span><span class="string">"email"</span> <span class="attr">name=</span><span class="string">"email"</span>&gt;</span><span class="tag">&lt;br&gt;</span><span class="tag">&lt;br&gt;</span>
+
+  <span class="tag">&lt;button <span class="attr">type=</span><span class="string">"submit"</span>&gt;</span>Envoyer<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/form&gt;</span></div>
+                    `
+                },
+                {
+                    id: 'module5',
+                    title: 'Module 5: HTML Sémantique & CSS',
+                    weeks: ' ',
+                    objectives: [
+                        "Comprendre l'importance des balises sémantiques.",
+                        "Structurer une page avec `<header>`, `<main>`, `<footer>`, etc.",
+                        "Aperçu de la relation entre HTML et CSS."
+                    ],
+                    content: `
+                        <p class="mb-4">Le HTML moderne ne sert pas seulement à afficher du contenu, mais aussi à lui donner du sens. Les balises sémantiques décrivent la nature du contenu, ce qui est crucial pour le référencement (SEO) et l'accessibilité. Nous terminerons avec une brève introduction au CSS pour voir comment styliser notre structure.</p>
+                        <h4 class="font-semibold text-lg mb-2 text-gray-700">Contenu Détaillé:</h4>
+                        <ul class="list-disc">
+                            <li><b>Pourquoi la sémantique ?</b>: SEO, accessibilité, maintenabilité.</li>
+                            <li><b>Balises de structure</b>: \`<header>\`, \`<nav>\`, \`<main>\`, \`<footer>\`.</li>
+                            <li><b>Balises de contenu</b>: \`<section>\`, \`<article>\`, \`<aside>\`.</li>
+                            <li><b>Introduction au CSS</b>: Qu'est-ce que c'est et comment ça fonctionne avec le HTML.</li>
+                        </ul>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Démonstration : Appliquer du style avec CSS</h4>
+                        <p class="text-sm mb-2 text-gray-600">Le HTML définit la structure (le titre ci-dessous), et le CSS ajoute le style. Cliquez sur le bouton pour changer la couleur du titre.</p>
+                        <div id="css-demo-container" class="border p-4 rounded-lg bg-slate-50">
+                             <h3 id="css-demo-title" class="text-2xl font-bold transition-colors duration-300">Ceci est mon titre</h3>
+                             <button id="css-demo-button" class="mt-4 bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">Changer la couleur</button>
+                        </div>
+                    `
+                }
+            ],
+            evaluation: {
+                labels: ['Exercices Pratiques', 'Mini-Projet Page Web', 'Quiz Final'],
+                data: [50, 30, 20],
+                colors: ['#fb923c', '#fdba74', '#f97316']
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const moduleNav = document.getElementById('module-nav');
+            const contentArea = document.getElementById('module-content-area');
+
+            courseData.modules.forEach((module, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="#${module.id}" data-index="${index}" class="nav-item block p-4 rounded-lg cursor-pointer">
+                    <span class="font-semibold block">${module.title}</span>
+                    <span class="text-sm text-gray-500">${module.weeks}</span>
+                </a>`;
+                moduleNav.appendChild(li);
+            });
+
+            const navLinks = moduleNav.querySelectorAll('a');
+
+            function setupCssDemo() {
+                const button = document.getElementById('css-demo-button');
+                const title = document.getElementById('css-demo-title');
+                if (button && title) {
+                    const colors = ['#f97316', '#22c55e', '#3b82f6', '#ef4444', '#44403c'];
+                    let currentIndex = 0;
+                    button.addEventListener('click', () => {
+                        currentIndex = (currentIndex + 1) % colors.length;
+                        title.style.color = colors[currentIndex];
+                    });
+                }
+            }
+
+            function displayModule(index) {
+                const module = courseData.modules[index];
+                if (!module) return;
+
+                navLinks.forEach(link => link.classList.remove('active'));
+                navLinks[index].classList.add('active');
+
+                contentArea.innerHTML = `
+                    <div class="content-card module-content">
+                        <h3 class="text-2xl font-bold mb-2 text-orange-600">${module.title}</h3>
+                        <p class="font-semibold mb-4 text-gray-500">${module.weeks}</p>
+                        <div class="mb-6">
+                            <h4 class="font-semibold text-lg mb-2 text-gray-700">Objectifs du module :</h4>
+                            <ul class="list-disc">
+                                ${module.objectives.map(obj => `<li>${obj}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <hr class="my-6">
+                        ${module.content}
+                    </div>
+                `;
+
+                if (module.id === 'module5') {
+                    setupCssDemo();
+                }
+            }
+
+            moduleNav.addEventListener('click', function(e) {
+                const link = e.target.closest('a');
+                if (link) {
+                    e.preventDefault();
+                    const index = parseInt(link.dataset.index, 10);
+                    displayModule(index);
+                }
+            });
+
+            displayModule(0);
+
+            const ctx = document.getElementById('evaluationChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: courseData.evaluation.labels,
+                    datasets: [{
+                        data: courseData.evaluation.data,
+                        backgroundColor: courseData.evaluation.colors,
+                        borderColor: '#fcf8f3',
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 20, font: { size: 14 } } },
+                        tooltip: { callbacks: { label: (c) => `${c.label}: ${c.raw}%` } }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
