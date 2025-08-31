@@ -1,11 +1,23 @@
-# RAN_B2_PMN_2025-2026
 
-## Aperçu des pages web
+# Semaine de Remise à Niveau - B3 PMN (2025-2026)
+Bienvenue dans cette semaine de remise à niveau ! L'objectif est de réactiver et consolider vos compétences fondamentales en développement avant de démarrer l'année.
 
-Ce projet est composé de trois pages HTML statiques :
+## Contenu Pédagogique
 
-- **[INTR HTML](./Intro_Html.html)** : Présente l'outil TalentJump.
-- **[INTRO JAVA](./Intro_Java.html)** : Affiche la liste de tous les candidats (sous forme de cartes).
-- **[INTRO ALGO](./Intro_algo.html)** : Permet de saisir les informations pour un nouveau candidat.
+Pour vous aider à préparer le projet, voici quelques cours de révision. Ils sont facultatifs mais fortement recommandés pour vous rafraîchir la mémoire.
 
-Vous pouvez aussi voir le **[Projet B3](./Projet_RAN_B3.html)** (ce fichier sera créé après l'exécution du programme Java).
+ **[Introduction à l'Algorithmique](./Intro_algo.html)** : Révisez les concepts fondamentaux de la logique et de la résolution de problèmes.
+ **[Introduction à Java](./Intro_Java.html)**: Consolidez vos bases en structuration de pages web.
+ **[Introduction au HTML](./Intro_Html.html)**: Rafraîchissez vos connaissances en programmation orientée objet.
+
+## Le Projet à Rendre
+
+Le cœur de cette semaine est la réalisation d'un projet en binômes qui mettra en application les concepts que vous avez révisés.
+
+➡️ Consulter le cahier des charges du projet **[Projet](./Projet_RAN_B3.html)**
+
+## Deadline
+
+Vous avez 5 jours pour compléter et soumettre votre projet. La remise est prévue pour la fin de la semaine.
+
+Bon travail et bonne semaine à tous !
