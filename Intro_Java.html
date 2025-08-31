@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan de Cours Interactif - Introduction à Java</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Cool Blues -->
+    <!-- Application Structure Plan: The application uses a single-page dashboard structure similar to the previous version. A header introduces the Java course, followed by a summary of key learning objectives. The core of the application is a two-column layout featuring a vertical tab navigation for the course modules and a dynamic content area. This structure is ideal for presenting a syllabus as it allows users to easily jump between topics without scrolling through a long document. The final section visualizes the grading policy. This user-centric design breaks down the curriculum into digestible parts, facilitating exploration. -->
+    <!-- Visualization & Content Choices:
+        - Course Modules -> Goal: Organize/Inform -> Viz: Vertical Tab Navigation -> Interaction: Click to display module content -> Justification: Provides a clear and structured way to explore the course syllabus. Implemented with JS.
+        - Evaluation Methods -> Goal: Compare/Inform -> Viz: Donut Chart -> Interaction: Hover for details -> Justification: Offers an immediate visual breakdown of how students will be evaluated. Implemented with Chart.js.
+        - Primitives vs. Objects (Module 1) -> Goal: Explain/Compare -> Viz: Bar Chart -> Interaction: Buttons to highlight concepts -> Justification: Visually demonstrates the fundamental and often confusing concept of memory allocation for different data types in Java, enhancing comprehension. Implemented with Chart.js and JS event listeners. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+            color: #334155;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .memory-chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        .nav-item {
+            transition: all 0.2s ease-in-out;
+            border-left-width: 4px;
+            border-color: transparent;
+        }
+        .nav-item.active {
+            background-color: #dbeafe;
+            border-color: #3b82f6;
+            color: #1e293b;
+            font-weight: 600;
+        }
+        .nav-item:hover {
+            background-color: #e2e8f0;
+            border-color: #93c5fd;
+        }
+        .content-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 2rem;
+            border: 1px solid #e5e5e5;
+        }
+        .module-content ul {
+            list-style-position: inside;
+            padding-left: 0.5rem;
+        }
+        .module-content ul li {
+            margin-bottom: 0.75rem;
+        }
+        .module-content ul ul {
+            list-style-type: circle;
+            padding-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        .code-block {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            margin-top: 1rem;
+            white-space: pre;
+        }
+        .code-block .keyword { color: #93c5fd; }
+        .code-block .type { color: #6ee7b7; }
+        .code-block .string { color: #fcd34d; }
+        .code-block .comment { color: #9ca3af; }
+        .code-block .number { color: #f9a8d4; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <header class="text-center mb-12">
+            <img src="https://www.ecole-pmn.fr/wp-content/uploads/2025/02/Logo_PMN_NOIR_RVB-1.webp" alt="Logo de l'école" class="mx-auto h-20 w-auto mb-6" onerror="this.onerror=null;this.src='https://placehold.co/200x80/f1f5f9/334155?text=Logo';">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-800 tracking-tight">Introduction à la Programmation Java</h1>
+            <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Une exploration interactive du plan de cours, conçue pour vous initier au langage Java et à la programmation orientée objet.</p>
+        </header>
+
+        <main>
+            <section id="course-overview" class="mb-16">
+                <div class="content-card">
+                    <h2 class="text-2xl font-bold mb-4 text-blue-600">Objectifs Généraux du Cours</h2>
+                    <p class="mb-6 text-gray-700">Ce cours vous fournira les bases solides pour développer des applications en Java. Vous apprendrez la syntaxe du langage, les principes de la programmation orientée objet (POO) et comment gérer les erreurs courantes.</p>
+                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-gray-800">
+                        <li class="flex items-start"><span class="text-blue-500 font-bold text-2xl mr-3 mt-[-4px]">✓</span><span>Écrire, compiler et exécuter des programmes Java simples.</span></li>
+                        <li class="flex items-start"><span class="text-blue-500 font-bold text-2xl mr-3 mt-[-4px]">✓</span><span>Utiliser les structures de contrôle pour diriger le flux d'un programme.</span></li>
+                        <li class="flex items-start"><span class="text-blue-500 font-bold text-2xl mr-3 mt-[-4px]">✓</span><span>Appliquer les concepts clés de la POO : classes, objets, héritage.</span></li>
+                        <li class="flex items-start"><span class="text-blue-500 font-bold text-2xl mr-3 mt-[-4px]">✓</span><span>Manipuler des collections de données avec des tableaux et des listes.</span></li>
+                        <li class="flex items-start"><span class="text-blue-500 font-bold text-2xl mr-3 mt-[-4px]">✓</span><span>Gérer les exceptions pour créer des applications robustes.</span></li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="modules-explorer">
+                <h2 class="text-3xl font-bold text-center mb-8 text-slate-800">Explorateur des Modules</h2>
+                <div class="flex flex-col md:flex-row gap-8">
+                    <nav class="md:w-1/4">
+                        <ul id="module-nav" class="space-y-2 sticky top-8">
+                        </ul>
+                    </nav>
+                    <div id="module-content-area" class="md:w-3/4 min-h-[500px]">
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const courseData = {
+            modules: [
+                {
+                    id: 'module1',
+                    title: 'Module 1: Fondamentaux de Java',
+                    weeks: ' ',
+                    objectives: [
+                        "Comprendre l'écosystème Java (JVM, JRE, JDK).",
+                        "Maîtriser la syntaxe de base, les variables et les types de données primitifs.",
+                        "Écrire, compiler et exécuter un premier programme Java."
+                    ],
+                    content: `
+                        <p class="mb-4">Ce module d'introduction vous plonge dans le monde de Java. Nous commencerons par installer les outils nécessaires et comprendre ce qui rend Java si populaire. Vous écrirez votre premier programme "Hello, World!" et vous familiariserez avec les briques de base de tout programme Java.</p>
+                        <h4 class="font-semibold text-lg mb-2 text-gray-700">Contenu Détaillé:</h4>
+                        <ul class="list-disc">
+                            <li><b>Écosystème Java</b>: JVM, JRE, JDK. Le principe "Write Once, Run Anywhere".</li>
+                            <li><b>Syntaxe de Base</b>: Structure d'une classe, la méthode main().</li>
+                            <li><b>Variables et Types Primitifs</b>: int, double, boolean, char. Déclaration et initialisation.</li>
+                            <li><b>Opérateurs</b>: Arithmétiques, de comparaison et logiques.</li>
+                        </ul>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple 1 : Le "Hello, World!"</h4>
+                        <div class="code-block"><span class="comment">// Votre premier programme Java</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="type">HelloWorld</span> {
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="type">main</span>(<span class="type">String</span>[] args) {
+        <span class="type">System</span>.out.println(<span class="string">"Hello, World!"</span>);
+    }
+}</div>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple 2 : Variables et Opérations</h4>
+                        <div class="code-block"><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">Variables</span> {
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="type">main</span>(<span class="type">String</span>[] args) {
+        <span class="comment">// Déclaration et initialisation de variables</span>
+        <span class="type">int</span> age = <span class="number">30</span>;
+        <span class="type">double</span> prix = <span class="number">19.99</span>;
+        <span class="type">char</span> initiale = <span class="string">'J'</span>;
+        <span class="type">boolean</span> estEtudiant = <span class="keyword">true</span>;
+
+        <span class="comment">// Affichage des variables</span>
+        <span class="type">System</span>.out.println(<span class="string">"Âge : "</span> + age);
+
+        <span class="comment">// Opération simple</span>
+        <span class="type">int</span> anneeProchaine = age + <span class="number">1</span>;
+        <span class="type">System</span>.out.println(<span class="string">"L'année prochaine, vous aurez "</span> + anneeProchaine + <span class="string">" ans."</span>);
+    }
+}</div>
+                        <div id="memory-section" class="mt-8"></div>
+                    `
+                },
+                {
+                    id: 'module2',
+                    title: 'Module 2: Structures de Contrôle',
+                    weeks: ' ',
+                    objectives: [
+                        "Utiliser les conditions pour exécuter du code de manière sélective.",
+                        "Utiliser les boucles pour répéter des blocs de code."
+                    ],
+                    content: `
+                        <p class="mb-4">Dans ce module, nous donnons vie à nos programmes en leur permettant de prendre des décisions et de répéter des tâches. La maîtrise des structures de contrôle est fondamentale pour développer des logiques applicatives complexes.</p>
+                        <h4 class="font-semibold text-lg mb-2 text-gray-700">Contenu Détaillé:</h4>
+                        <ul class="list-disc">
+                            <li><b>Structures Conditionnelles</b>: \`if\`, \`else\`, \`else if\`. L'opérateur ternaire.</li>
+                            <li><b>L'instruction \`switch\`</b>: Une alternative aux multiples \`if-else\`.</li>
+                            <li><b>Boucles</b>: \`while\`, \`do-while\` et \`for\`.</li>
+                            <li><b>Contrôle de boucle</b>: \`break\` et \`continue\`.</li>
+                        </ul>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple 1 : Condition \`if-else\`</h4>
+                        <div class="code-block"><span class="type">int</span> note = <span class="number">12</span>;
+<span class="keyword">if</span> (note >= <span class="number">10</span>) {
+    <span class="type">System</span>.out.println(<span class="string">"Félicitations, vous avez validé !"</span>);
+} <span class="keyword">else</span> {
+    <span class="type">System</span>.out.println(<span class="string">"Il faut travailler un peu plus."</span>);
+}</div>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple 2 : Boucle \`for\`</h4>
+                        <div class="code-block"><span class="comment">// Boucle pour afficher les nombres de 1 à 5</span>
+<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i <= <span class="number">5</span>; i++) {
+    <span class="type">System</span>.out.println(<span class="string">"Ligne numéro "</span> + i);
+}</div>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple 3 : Boucle \`while\`</h4>
+                        <div class="code-block"><span class="type">int</span> compteur = <span class="number">0</span>;
+<span class="keyword">while</span> (compteur < <span class="number">3</span>) {
+    <span class="type">System</span>.out.println(<span class="string">"Le compteur est à "</span> + compteur);
+    compteur++; <span class="comment">// Ne pas oublier d'incrémenter !</span>
+}</div>
+                    `
+                },
+                {
+                    id: 'module3',
+                    title: 'Module 3: Intro à la P.O.O.',
+                    weeks: ' ',
+                    objectives: [
+                        "Comprendre la différence entre une classe et un objet.",
+                        "Créer et instancier ses propres classes.",
+                        "Appliquer le principe d'encapsulation."
+                    ],
+                    content: `
+                        <p class="mb-4">C'est ici que nous abordons le paradigme qui fait la force de Java : la Programmation Orientée Objet. Vous apprendrez à modéliser des concepts du monde réel sous forme de classes et d'objets, une compétence essentielle pour construire des applications structurées et évolutives.</p>
+                        <h4 class="font-semibold text-lg mb-2 text-gray-700">Contenu Détaillé:</h4>
+                        <ul class="list-disc">
+                            <li><b>Classes et Objets</b>: Attributs (champs) et méthodes.</li>
+                            <li><b>Constructeurs</b>: Initialiser l'état d'un objet.</li>
+                            <li><b>Encapsulation</b>: Visibilité (\`public\`, \`private\`) et les accesseurs (getters/setters).</li>
+                            <li><b>Le mot-clé \`this\`</b>: Se référer à l'instance courante.</li>
+                            <li><b>Membres \`static\`</b>: Champs et méthodes de classe.</li>
+                        </ul>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple 1 : Définition d'une classe</h4>
+                        <div class="code-block"><span class="comment">// Fichier: Voiture.java</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="type">Voiture</span> {
+    <span class="keyword">private</span> <span class="type">String</span> marque;
+    <span class="keyword">private</span> <span class="type">int</span> annee;
+
+    <span class="keyword">public</span> <span class="type">Voiture</span>(<span class="type">String</span> marque, <span class="type">int</span> annee) {
+        <span class="keyword">this</span>.marque = marque;
+        <span class="keyword">this</span>.annee = annee;
+    }
+
+    <span class="keyword">public</span> <span class="type">String</span> getMarque() { <span class="keyword">return</span> marque; }
+    <span class="keyword">public</span> <span class="type">int</span> getAnnee() { <span class="keyword">return</span> annee; }
+}</div>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple 2 : Création et utilisation d'objets</h4>
+                        <div class="code-block"><span class="comment">// Dans une autre classe avec une méthode main</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="type">Garage</span> {
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="type">main</span>(<span class="type">String</span>[] args) {
+        <span class="comment">// Création de deux objets (instances) de la classe Voiture</span>
+        <span class="type">Voiture</span> maVoiture1 = <span class="keyword">new</span> <span class="type">Voiture</span>(<span class="string">"Renault"</span>, <span class="number">2021</span>);
+        <span class="type">Voiture</span> maVoiture2 = <span class="keyword">new</span> <span class="type">Voiture</span>(<span class="string">"Peugeot"</span>, <span class="number">2023</span>);
+
+        <span class="comment">// Utilisation des méthodes des objets</span>
+        <span class="type">System</span>.out.println(<span class="string">"Voiture 1 : "</span> + maVoiture1.getMarque());
+        <span class="type">System</span>.out.println(<span class="string">"Voiture 2 : "</span> + maVoiture2.getMarque());
+    }
+}</div>
+                    `
+                },
+                {
+                    id: 'module4',
+                    title: 'Module 4: Concepts de POO Avancés',
+                    weeks: ' ',
+                    objectives: [
+                        "Mettre en œuvre l'héritage pour réutiliser du code.",
+                        "Comprendre le polymorphisme et la redéfinition de méthodes.",
+                        "Utiliser les classes abstraites et les interfaces."
+                    ],
+                    content: `
+                        <p class="mb-4">Nous approfondissons la POO avec trois de ses piliers les plus puissants. L'héritage, le polymorphisme et l'abstraction sont des concepts qui permettent de créer des hiérarchies de classes flexibles, robustes et faciles à maintenir.</p>
+                        <h4 class="font-semibold text-lg mb-2 text-gray-700">Contenu Détaillé:</h4>
+                        <ul class="list-disc">
+                            <li><b>Héritage</b>: Le mot-clé \`extends\`, la superclasse \`Object\`.</li>
+                            <li><b>Polymorphisme</b>: Redéfinition de méthodes (\`@Override\`).</li>
+                            <li><b>Classes Abstraites</b>: Créer des modèles de classes incomplets.</li>
+                            <li><b>Interfaces</b>: Définir des contrats de comportement.</li>
+                        </ul>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple 1 : Héritage et Redéfinition</h4>
+                        <div class="code-block"><span class="comment">// Classe parent</span>
+<span class="keyword">class</span> <span class="type">Vehicule</span> {
+    <span class="keyword">public</span> <span class="keyword">void</span> demarrer() {
+        <span class="type">System</span>.out.println(<span class="string">"Le véhicule démarre."</span>);
+    }
+}
+<span class="comment">// La classe Voiture hérite de Vehicule</span>
+<span class="keyword">class</span> <span class="type">Voiture</span> <span class="keyword">extends</span> <span class="type">Vehicule</span> {
+    <span class="keyword">@Override</span> <span class="comment">// Indique qu'on redéfinit la méthode parent</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> demarrer() {
+        <span class="type">System</span>.out.println(<span class="string">"La voiture démarre en tournant la clé."</span>);
+    }
+}</div>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple 2 : Polymorphisme</h4>
+                        <div class="code-block"><span class="type">Vehicule</span> monVehicule = <span class="keyword">new</span> <span class="type">Vehicule</span>();
+<span class="type">Vehicule</span> maVoiture = <span class="keyword">new</span> <span class="type">Voiture</span>(); <span class="comment">// Un objet Voiture EST aussi un Vehicule</span>
+
+monVehicule.demarrer(); <span class="comment">// Affiche "Le véhicule démarre."</span>
+maVoiture.demarrer();   <span class="comment">// Affiche "La voiture démarre en tournant la clé."</span>
+</div>
+                    `
+                },
+                {
+                    id: 'module5',
+                    title: 'Module 5: Structures de Données & Exceptions',
+                    weeks: ' ',
+                    objectives: [
+                        "Stocker des collections d'objets avec les tableaux et ArrayList.",
+                        "Comprendre et gérer les erreurs d'exécution avec les exceptions."
+                    ],
+                    content: `
+                        <p class="mb-4">Pour finir, nous nous attaquons à deux aspects pratiques cruciaux du développement : la gestion de collections de données et la manière de rendre nos programmes résistants aux erreurs imprévues. Ces compétences sont indispensables pour écrire des applications fiables.</p>
+                        <h4 class="font-semibold text-lg mb-2 text-gray-700">Contenu Détaillé:</h4>
+                        <ul class="list-disc">
+                            <li><b>Tableaux (Arrays)</b>: Stockage de données de taille fixe.</li>
+                            <li><b>La classe \`ArrayList\`</b>: Listes dynamiques.</li>
+                            <li><b>Introduction aux Exceptions</b>: Le concept d'erreur à l'exécution.</li>
+                            <li><b>Gestion des Exceptions</b>: Blocs \`try\`, \`catch\`, \`finally\`.</li>
+                        </ul>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple 1 : Utilisation d'un ArrayList</h4>
+                        <div class="code-block"><span class="keyword">import</span> java.util.ArrayList; <span class="comment">// Il faut importer la classe</span>
+
+<span class="type">ArrayList</span>&lt;<span class="type">String</span>&gt; listeDeCourses = <span class="keyword">new</span> <span class="type">ArrayList</span>&lt;&gt;();
+listeDeCourses.add(<span class="string">"Pommes"</span>);
+listeDeCourses.add(<span class="string">"Lait"</span>);
+listeDeCourses.add(<span class="string">"Pain"</span>);
+
+<span class="type">System</span>.out.println(<span class="string">"Mon premier article : "</span> + listeDeCourses.get(<span class="number">0</span>));
+
+<span class="keyword">for</span> (<span class="type">String</span> article : listeDeCourses) {
+    <span class="type">System</span>.out.println(<span class="string">"- "</span> + article);
+}</div>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple 2 : Gestion des Exceptions</h4>
+                        <div class="code-block"><span class="keyword">try</span> {
+    <span class="type">int</span>[] nombres = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>};
+    <span class="type">System</span>.out.println(nombres[<span class="number">5</span>]); <span class="comment">// Provoque une erreur</span>
+} <span class="keyword">catch</span> (<span class="type">ArrayIndexOutOfBoundsException</span> e) {
+    <span class="type">System</span>.err.println(<span class="string">"Erreur : L'index est hors des limites du tableau !"</span>);
+} <span class="keyword">finally</span> {
+    <span class="type">System</span>.out.println(<span class="string">"Le bloc try-catch est terminé."</span>);
+}</div>
+                    `
+                }
+            ],
+            evaluation: {
+                labels: ['Travaux Pratiques (TP)', 'Projet Final', 'Examen Final'],
+                data: [40, 20, 40],
+                colors: ['#60a5fa', '#93c5fd', '#3b82f6']
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const moduleNav = document.getElementById('module-nav');
+            const contentArea = document.getElementById('module-content-area');
+
+            courseData.modules.forEach((module, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="#${module.id}" data-index="${index}" class="nav-item block p-4 rounded-lg cursor-pointer">
+                    <span class="font-semibold block">${module.title}</span>
+                    <span class="text-sm text-gray-500">${module.weeks}</span>
+                </a>`;
+                moduleNav.appendChild(li);
+            });
+
+            const navLinks = moduleNav.querySelectorAll('a');
+
+            function displayModule(index) {
+                const module = courseData.modules[index];
+                if (!module) return;
+
+                navLinks.forEach(link => link.classList.remove('active'));
+                navLinks[index].classList.add('active');
+
+                contentArea.innerHTML = `
+                    <div class="content-card module-content">
+                        <h3 class="text-2xl font-bold mb-2 text-blue-600">${module.title}</h3>
+                        <p class="font-semibold mb-4 text-gray-500">${module.weeks}</p>
+                        <div class="mb-6">
+                            <h4 class="font-semibold text-lg mb-2 text-gray-700">Objectifs du module :</h4>
+                            <ul class="list-disc">
+                                ${module.objectives.map(obj => `<li>${obj}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <hr class="my-6">
+                        ${module.content}
+                    </div>
+                `;
+
+                if (module.id === 'module1') {
+                    renderMemoryChart();
+                }
+            }
+
+            moduleNav.addEventListener('click', function(e) {
+                const link = e.target.closest('a');
+                if (link) {
+                    e.preventDefault();
+                    const index = parseInt(link.dataset.index, 10);
+                    displayModule(index);
+                }
+            });
+
+            displayModule(0);
+
+            const ctx = document.getElementById('evaluationChart').getContext('2d');
+            new Chart(ctx, {
+                    type: 'doughnut',
+                data: {
+                    labels: courseData.evaluation.labels,
+                    datasets: [{
+                        data: courseData.evaluation.data,
+                        backgroundColor: courseData.evaluation.colors,
+                        borderColor: '#f1f5f9',
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 20, font: { size: 14 } } },
+                        tooltip: { callbacks: { label: (c) => `${c.label}: ${c.raw}%` } }
+                    }
+                }
+            });
+
+            function renderMemoryChart() {
+                const container = document.getElementById('memory-section');
+                container.innerHTML = `
+                    <h4 class="font-semibold text-lg mb-2 text-gray-700">Mémoire : Primitifs vs. Objets</h4>
+                    <p class="text-sm mb-4 text-gray-600">Visualisez la différence de stockage en mémoire. Les types primitifs stockent leur valeur directement dans la pile (Stack), tandis que les objets stockent une référence vers une adresse dans le tas (Heap).</p>
+                    <div class="flex justify-center gap-4 mb-4 flex-wrap">
+                        <button data-type="primitive" class="memory-btn bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-2 px-4 rounded-lg transition-colors">Type Primitif (ex: int)</button>
+                        <button data-type="object" class="memory-btn bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-2 px-4 rounded-lg transition-colors">Type Objet (ex: String)</button>
+                    </div>
+                    <div class="memory-chart-container">
+                        <canvas id="memoryChart"></canvas>
+                    </div>
+                `;
+
+                const memoryCtx = document.getElementById('memoryChart').getContext('2d');
+                const labels = ['Pile (Stack)', 'Tas (Heap)'];
+                const baseColors = ['#60a5fa', '#3b82f6'];
+
+                const memoryChart = new Chart(memoryCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Emplacement de la donnée',
+                            data: [0, 0],
+                            backgroundColor: baseColors,
+                            barPercentage: 0.5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: true, display: false }, x: {} },
+                        plugins: { legend: { display: false }, tooltip: { enabled: false } }
+                    }
+                });
+
+                function updateChart(type) {
+                    if (type === 'primitive') {
+                        memoryChart.data.datasets[0].data = [100, 0];
+                        memoryChart.data.datasets[0].label = 'La valeur est stockée ici';
+                    } else if (type === 'object') {
+                        memoryChart.data.datasets[0].data = [20, 100];
+                        memoryChart.data.datasets[0].label = 'La référence est ici, la valeur est là';
+                    }
+                    memoryChart.update();
+                }
+
+                document.querySelectorAll('.memory-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        updateChart(btn.dataset.type);
+                    });
+                });
+                updateChart('primitive');
+            }
+        });
+    </script>
+</body>
+</html>
+
