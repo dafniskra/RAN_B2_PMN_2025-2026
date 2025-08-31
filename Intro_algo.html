@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan de Cours Interactif - Introduction à l'Algorithmique</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Creams -->
+    <!-- Application Structure Plan: This single-page application presents an introductory course on algorithmics. It features a main header with the school's logo and course title. The core is a two-column layout with sticky vertical navigation on the left to browse modules, and a dynamic content area on the right. This allows students to easily switch between topics. Each module provides theoretical explanations and practical pseudo-code examples. An interactive chart in the final module helps visualize algorithmic complexity, a key concept. The page concludes with a donut chart illustrating the grading policy. This structure is designed for intuitive exploration of the course material. -->
+    <!-- Visualization & Content Choices:
+        - Course Modules -> Goal: Organize/Inform -> Viz: Vertical Tab Navigation -> Interaction: Click to display module content -> Justification: Provides a clear, non-linear way to access the syllabus content.
+        - Pseudo-code examples -> Goal: Explain -> Viz: Styled code blocks -> Interaction: None -> Justification: Offers concrete, easy-to-read examples for beginners to understand abstract concepts.
+        - Algorithmic Complexity -> Goal: Compare/Explain -> Viz: Line Chart -> Interaction: Hover for details -> Justification: Visually demonstrates the crucial difference in performance between common complexity classes (O(1), O(n), O(n²)).
+        - Evaluation Methods -> Goal: Inform -> Viz: Donut Chart -> Interaction: Hover for details -> Justification: Provides a quick visual summary of the grading breakdown.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fcf8f3;
+            color: #44403c;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .complexity-chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        .nav-item {
+            transition: all 0.2s ease-in-out;
+            border-left-width: 4px;
+            border-color: transparent;
+        }
+        .nav-item.active {
+            background-color: #fee2d5;
+            border-color: #f97316;
+            color: #9a3412;
+            font-weight: 600;
+        }
+        .nav-item:hover {
+            background-color: #fbeee9;
+            border-color: #fdbf9e;
+        }
+        .content-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 2rem;
+            border: 1px solid #e5e5e5;
+        }
+        .module-content ul {
+            list-style-position: inside;
+            padding-left: 0.5rem;
+        }
+        .module-content ul li {
+            margin-bottom: 0.75rem;
+        }
+        .module-content ul ul {
+            list-style-type: circle;
+            padding-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        .code-block {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            margin-top: 1rem;
+            white-space: pre;
+        }
+        .code-block .keyword { color: #93c5fd; }
+        .code-block .type { color: #6ee7b7; }
+        .code-block .string { color: #fcd34d; }
+        .code-block .comment { color: #9ca3af; }
+        .code-block .number { color: #f9a8d4; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <header class="text-center mb-12">
+            <img src="https://www.ecole-pmn.fr/wp-content/uploads/2025/02/Logo_PMN_NOIR_RVB-1.webp" alt="Logo de l'école" class="mx-auto h-20 w-auto mb-6" onerror="this.onerror=null;this.src='https://placehold.co/200x80/f1f5f9/334155?text=Logo';">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-800 tracking-tight">Introduction à l'Algorithmique</h1>
+            <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Apprenez à penser comme un développeur en résolvant des problèmes de manière structurée et logique.</p>
+        </header>
+
+        <main>
+            <section id="course-overview" class="mb-16">
+                <div class="content-card">
+                    <h2 class="text-2xl font-bold mb-4 text-orange-600">Objectifs Généraux du Cours</h2>
+                    <p class="mb-6 text-gray-700">Ce cours est une introduction à la pensée algorithmique. L'objectif est de vous apprendre à décomposer un problème complexe en une série d'étapes simples et non ambiguës, qui pourront ensuite être traduites dans n'importe quel langage de programmation.</p>
+                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-gray-800">
+                        <li class="flex items-start"><span class="text-orange-500 font-bold text-2xl mr-3 mt-[-4px]">✓</span><span>Analyser un problème et en extraire les exigences.</span></li>
+                        <li class="flex items-start"><span class="text-orange-500 font-bold text-2xl mr-3 mt-[-4px]">✓</span><span>Concevoir des solutions logiques à l'aide du pseudo-code.</span></li>
+                        <li class="flex items-start"><span class="text-orange-500 font-bold text-2xl mr-3 mt-[-4px]">✓</span><span>Maîtriser les structures de contrôle fondamentales.</span></li>
+                        <li class="flex items-start"><span class="text-orange-500 font-bold text-2xl mr-3 mt-[-4px]">✓</span><span>Manipuler des ensembles de données simples comme les tableaux.</span></li>
+                        <li class="flex items-start"><span class="text-orange-500 font-bold text-2xl mr-3 mt-[-4px]">✓</span><span>Comprendre l'importance de l'efficacité d'un algorithme.</span></li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="modules-explorer">
+                <h2 class="text-3xl font-bold text-center mb-8 text-slate-800">Explorateur des Modules</h2>
+                <div class="flex flex-col md:flex-row gap-8">
+                    <nav class="md:w-1/4">
+                        <ul id="module-nav" class="space-y-2 sticky top-8">
+                        </ul>
+                    </nav>
+                    <div id="module-content-area" class="md:w-3/4 min-h-[500px]">
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const courseData = {
+            modules: [
+                {
+                    id: 'module1',
+                    title: 'Module 1: Qu\'est-ce qu\'un Algorithme ?',
+                    weeks: 'Semaines 1-2',
+                    objectives: [
+                        "Définir ce qu'est un algorithme.",
+                        "Comprendre le rôle des variables et des types de données.",
+                        "Écrire des instructions simples en pseudo-code."
+                    ],
+                    content: `
+                        <p class="mb-4">Ce premier module pose les bases de la pensée algorithmique. Nous verrons qu'un algorithme est simplement une "recette de cuisine" pour résoudre un problème. Vous apprendrez à stocker des informations dans des variables et à réaliser des opérations de base.</p>
+                        <h4 class="font-semibold text-lg mb-2 text-gray-700">Contenu Détaillé:</h4>
+                        <ul class="list-disc">
+                            <li><b>Définition</b>: Suite d'instructions finie et non ambiguë.</li>
+                            <li><b>Variables</b>: Boîtes pour stocker des informations (nombres, texte, etc.).</li>
+                            <li><b>Types de données</b>: ENTIER, REEL, CHAINE, BOOLEEN.</li>
+                            <li><b>Opérations de base</b>: Affectation, lecture, écriture, calculs arithmétiques.</li>
+                        </ul>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple : Calculer la somme de deux nombres</h4>
+                        <div class="code-block"><span class="keyword">ALGORITHME</span> Somme
+<span class="comment">// Description : Cet algorithme demande deux nombres à l'utilisateur et affiche leur somme.</span>
+
+<span class="keyword">VARIABLES</span>
+    nombre1 : <span class="type">ENTIER</span>
+    nombre2 : <span class="type">ENTIER</span>
+    resultat : <span class="type">ENTIER</span>
+
+<span class="keyword">DEBUT</span>
+    <span class="keyword">ECRIRE</span> <span class="string">"Entrez le premier nombre :"</span>
+    <span class="keyword">LIRE</span> nombre1
+
+    <span class="keyword">ECRIRE</span> <span class="string">"Entrez le second nombre :"</span>
+    <span class="keyword">LIRE</span> nombre2
+
+    resultat <span class="keyword">←</span> nombre1 + nombre2
+
+    <span class="keyword">ECRIRE</span> <span class="string">"La somme est : "</span>, resultat
+<span class="keyword">FIN</span></div>
+                    `
+                },
+                {
+                    id: 'module2',
+                    title: 'Module 2: Les Structures de Contrôle',
+                    weeks: 'Semaines 3-4',
+                    objectives: [
+                        "Utiliser les conditions pour faire des choix.",
+                        "Utiliser les boucles pour répéter des actions.",
+                        "Combiner les structures pour créer des logiques plus complexes."
+                    ],
+                    content: `
+                        <p class="mb-4">Un algorithme ne se contente pas d'exécuter des instructions les unes après les autres. Dans ce module, nous allons apprendre à lui donner la capacité de prendre des décisions (conditions) et de répéter des tâches (boucles).</p>
+                        <h4 class="font-semibold text-lg mb-2 text-gray-700">Contenu Détaillé:</h4>
+                        <ul class="list-disc">
+                            <li><b>Structure conditionnelle</b>: \`SI ... ALORS ... SINON ... FINSI\`.</li>
+                            <li><b>Boucle \`TANT QUE\`</b>: Répéter tant qu'une condition est vraie.</li>
+                            <li><b>Boucle \`POUR\`</b>: Répéter un nombre de fois connu à l'avance.</li>
+                        </ul>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple 1 : Vérifier si un nombre est pair ou impair</h4>
+                        <div class="code-block"><span class="keyword">VARIABLES</span>
+    nombre : <span class="type">ENTIER</span>
+<span class="keyword">DEBUT</span>
+    <span class="keyword">ECRIRE</span> <span class="string">"Entrez un nombre :"</span>
+    <span class="keyword">LIRE</span> nombre
+
+    <span class="keyword">SI</span> (nombre <span class="keyword">MOD</span> 2 == 0) <span class="keyword">ALORS</span>
+        <span class="keyword">ECRIRE</span> nombre, <span class="string">" est pair."</span>
+    <span class="keyword">SINON</span>
+        <span class="keyword">ECRIRE</span> nombre, <span class="string">" est impair."</span>
+    <span class="keyword">FINSI</span>
+<span class="keyword">FIN</span></div>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple 2 : Compter jusqu'à 5</h4>
+                        <div class="code-block"><span class="keyword">VARIABLES</span>
+    i : <span class="type">ENTIER</span>
+<span class="keyword">DEBUT</span>
+    <span class="keyword">POUR</span> i <span class="keyword">ALLANT_DE</span> 1 <span class="keyword">A</span> 5
+        <span class="keyword">ECRIRE</span> i
+    <span class="keyword">FINPOUR</span>
+<span class="keyword">FIN</span></div>
+                    `
+                },
+                {
+                    id: 'module3',
+                    title: 'Module 3: Les Tableaux',
+                    weeks: 'Semaines 5-7',
+                    objectives: [
+                        "Déclarer et initialiser un tableau.",
+                        "Accéder aux éléments d'un tableau et les modifier.",
+                        "Parcourir un tableau à l'aide d'une boucle."
+                    ],
+                    content: `
+                        <p class="mb-4">Comment gérer une liste de 100 notes ou de 1000 noms ? Utiliser 1000 variables différentes serait impossible. Les tableaux sont la solution ! Ils permettent de stocker une collection de données de même type sous un seul nom.</p>
+                        <h4 class="font-semibold text-lg mb-2 text-gray-700">Contenu Détaillé:</h4>
+                        <ul class="list-disc">
+                            <li><b>Définition</b>: Structure de données contenant plusieurs éléments.</li>
+                            <li><b>Indexation</b>: Accéder à un élément par sa position (souvent à partir de 0 ou 1).</li>
+                            <li><b>Parcours de tableau</b>: Utilisation de la boucle \`POUR\` pour visiter chaque élément.</li>
+                        </ul>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple : Calculer la moyenne de 5 notes</h4>
+                        <div class="code-block"><span class="keyword">VARIABLES</span>
+    notes : <span class="type">TABLEAU</span>[5] <span class="type">DE REEL</span>
+    somme : <span class="type">REEL</span> <span class="keyword">←</span> 0.0
+    moyenne : <span class="type">REEL</span>
+    i : <span class="type">ENTIER</span>
+<span class="keyword">DEBUT</span>
+    <span class="comment">// Remplissage du tableau</span>
+    <span class="keyword">POUR</span> i <span class="keyword">ALLANT_DE</span> 0 <span class="keyword">A</span> 4
+        <span class="keyword">ECRIRE</span> <span class="string">"Entrez la note N°"</span>, i + 1
+        <span class="keyword">LIRE</span> notes[i]
+        somme <span class="keyword">←</span> somme + notes[i]
+    <span class="keyword">FINPOUR</span>
+
+    moyenne <span class="keyword">←</span> somme / 5
+    <span class="keyword">ECRIRE</span> <span class="string">"La moyenne des notes est : "</span>, moyenne
+<span class="keyword">FIN</span></div>
+                    `
+                },
+                {
+                    id: 'module4',
+                    title: 'Module 4: Les Fonctions',
+                    weeks: 'Semaines 8-9',
+                    objectives: [
+                        "Comprendre l'intérêt de découper un algorithme en sous-problèmes.",
+                        "Définir et appeler une fonction.",
+                        "Utiliser des paramètres et des valeurs de retour."
+                    ],
+                    content: `
+                        <p class="mb-4">Les algorithmes complexes peuvent devenir très longs et difficiles à lire. Les fonctions permettent de les organiser en "mini-algorithmes" réutilisables, chacun responsable d'une tâche précise. C'est le principe de la modularité.</p>
+                        <h4 class="font-semibold text-lg mb-2 text-gray-700">Contenu Détaillé:</h4>
+                        <ul class="list-disc">
+                            <li><b>Modularité</b>: Diviser pour mieux régner.</li>
+                            <li><b>Fonction</b>: Un bloc d'instructions qui peut être appelé par son nom.</li>
+                            <li><b>Paramètres</b>: Informations que l'on donne à une fonction pour qu'elle travaille.</li>
+                            <li><b>Valeur de retour</b>: Le résultat que la fonction nous renvoie.</li>
+                        </ul>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple : Une fonction qui calcule le carré d'un nombre</h4>
+                        <div class="code-block"><span class="keyword">FONCTION</span> CalculerCarre(nombre : <span class="type">ENTIER</span>) : <span class="type">ENTIER</span>
+<span class="comment">// Rôle : Cette fonction prend un nombre en entrée et retourne son carré.</span>
+<span class="keyword">DEBUT_FONCTION</span>
+    <span class="keyword">RETOURNER</span> nombre * nombre
+<span class="keyword">FIN_FONCTION</span>
+
+<span class="keyword">ALGORITHME</span> Principal
+<span class="keyword">VARIABLES</span>
+    monNombre : <span class="type">ENTIER</span> <span class="keyword">←</span> 5
+    resultat : <span class="type">ENTIER</span>
+<span class="keyword">DEBUT</span>
+    <span class="comment">// Appel de la fonction</span>
+    resultat <span class="keyword">←</span> CalculerCarre(monNombre)
+    <span class="keyword">ECRIRE</span> <span class="string">"Le carré de "</span>, monNombre, <span class="string">" est "</span>, resultat
+<span class="keyword">FIN</span></div>
+                    `
+                },
+                {
+                    id: 'module5',
+                    title: 'Module 5: Tris et Complexité',
+                    weeks: 'Semaines 10-12',
+                    objectives: [
+                        "Implémenter un algorithme de tri simple (ex: tri à bulles).",
+                        "Comprendre que certains algorithmes sont plus rapides que d'autres.",
+                        "Introduction à la notion de complexité algorithmique (Big O)."
+                    ],
+                    content: `
+                        <p class="mb-4">Pour un même problème, il existe souvent plusieurs solutions algorithmiques. Sont-elles toutes équivalentes ? Dans ce module, nous verrons que non. Nous aborderons le tri, un problème classique, et nous nous initierons à la "complexité", qui permet de mesurer l'efficacité d'un algorithme.</p>
+                        <h4 class="font-semibold text-lg mb-2 text-gray-700">Contenu Détaillé:</h4>
+                        <ul class="list-disc">
+                            <li><b>Algorithmes de tri</b>: Le tri par sélection, le tri à bulles.</li>
+                            <li><b>Notion d'efficacité</b>: Temps d'exécution, utilisation de la mémoire.</li>
+                            <li><b>Complexité (Big O)</b>: Introduction à O(1), O(n), O(n²).</li>
+                        </ul>
+                        <h4 class="font-semibold text-lg mt-6 mb-2 text-gray-700">Exemple : Tri par sélection</h4>
+                        <div class="code-block"><span class="keyword">PROCEDURE</span> TriSelection(T : <span class="type">TABLEAU</span>)
+<span class="keyword">VARIABLES</span> i, j, min_idx, temp : <span class="type">ENTIER</span>
+<span class="keyword">DEBUT</span>
+    <span class="keyword">POUR</span> i <span class="keyword">ALLANT_DE</span> 0 <span class="keyword">A</span> taille(T) - 2
+        min_idx <span class="keyword">←</span> i
+        <span class="keyword">POUR</span> j <span class="keyword">ALLANT_DE</span> i + 1 <span class="keyword">A</span> taille(T) - 1
+            <span class="keyword">SI</span> T[j] < T[min_idx] <span class="keyword">ALORS</span>
+                min_idx <span class="keyword">←</span> j
+            <span class="keyword">FINSI</span>
+        <span class="keyword">FINPOUR</span>
+        <span class="comment">// Echanger T[i] et T[min_idx]</span>
+        temp <span class="keyword">←</span> T[i]
+        T[i] <span class="keyword">←</span> T[min_idx]
+        T[min_idx] <span class="keyword">←</span> temp
+    <span class="keyword">FINPOUR</span>
+<span class="keyword">FIN</span></div>
+                        <div id="complexity-section" class="mt-8"></div>
+                    `
+                }
+            ],
+            evaluation: {
+                labels: ['Exercices Pratiques', 'Projet Algorithmique', 'Examen Final'],
+                data: [40, 25, 35],
+                colors: ['#fb923c', '#fdba74', '#f97316']
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const moduleNav = document.getElementById('module-nav');
+            const contentArea = document.getElementById('module-content-area');
+
+            courseData.modules.forEach((module, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="#${module.id}" data-index="${index}" class="nav-item block p-4 rounded-lg cursor-pointer">
+                    <span class="font-semibold block">${module.title}</span>
+                    <span class="text-sm text-gray-500">${module.weeks}</span>
+                </a>`;
+                moduleNav.appendChild(li);
+            });
+
+            const navLinks = moduleNav.querySelectorAll('a');
+
+            function displayModule(index) {
+                const module = courseData.modules[index];
+                if (!module) return;
+
+                navLinks.forEach(link => link.classList.remove('active'));
+                navLinks[index].classList.add('active');
+
+                contentArea.innerHTML = `
+                    <div class="content-card module-content">
+                        <h3 class="text-2xl font-bold mb-2 text-orange-600">${module.title}</h3>
+                        <p class="font-semibold mb-4 text-gray-500">${module.weeks}</p>
+                        <div class="mb-6">
+                            <h4 class="font-semibold text-lg mb-2 text-gray-700">Objectifs du module :</h4>
+                            <ul class="list-disc">
+                                ${module.objectives.map(obj => `<li>${obj}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <hr class="my-6">
+                        ${module.content}
+                    </div>
+                `;
+
+                if (module.id === 'module5') {
+                    renderComplexityChart();
+                }
+            }
+
+            moduleNav.addEventListener('click', function(e) {
+                const link = e.target.closest('a');
+                if (link) {
+                    e.preventDefault();
+                    const index = parseInt(link.dataset.index, 10);
+                    displayModule(index);
+                }
+            });
+
+            displayModule(0);
+
+            const ctx = document.getElementById('evaluationChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: courseData.evaluation.labels,
+                    datasets: [{
+                        data: courseData.evaluation.data,
+                        backgroundColor: courseData.evaluation.colors,
+                        borderColor: '#fcf8f3',
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 20, font: { size: 14 } } },
+                        tooltip: { callbacks: { label: (c) => `${c.label}: ${c.raw}%` } }
+                    }
+                }
+            });
+
+            function renderComplexityChart() {
+                const container = document.getElementById('complexity-section');
+                if (!container) return;
+                container.innerHTML = `
+                    <h4 class="font-semibold text-lg mb-2 text-gray-700">Visualisation de la Complexité</h4>
+                    <p class="text-sm mb-4 text-gray-600">Ce graphique illustre comment le nombre d'opérations augmente en fonction de la taille des données (N) pour différentes complexités. Observez la croissance explosive de O(n²).</p>
+                    <div class="complexity-chart-container">
+                        <canvas id="complexityChart"></canvas>
+                    </div>
+                `;
+
+                const complexityCtx = document.getElementById('complexityChart').getContext('2d');
+                const labels = Array.from({length: 11}, (_, i) => i * 10); // N de 0 à 100
+
+                new Chart(complexityCtx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'O(1) - Constant',
+                                data: labels.map(() => 1),
+                                borderColor: '#34d399',
+                                tension: 0.1,
+                                borderWidth: 2,
+                                pointRadius: 0
+                            },
+                            {
+                                label: 'O(n) - Linéaire',
+                                data: labels.map(n => n),
+                                borderColor: '#fb923c',
+                                tension: 0.1,
+                                borderWidth: 2,
+                                pointRadius: 0
+                            },
+                            {
+                                label: 'O(n²) - Quadratique',
+                                data: labels.map(n => n * n),
+                                borderColor: '#f87171',
+                                tension: 0.1,
+                                borderWidth: 2,
+                                pointRadius: 0
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Nombre d\'opérations' }
+                            },
+                            x: {
+                                title: { display: true, text: 'Taille des données (N)' }
+                            }
+                        },
+                        plugins: {
+                            legend: { position: 'top' },
+                            tooltip: { mode: 'index', intersect: false }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
+
