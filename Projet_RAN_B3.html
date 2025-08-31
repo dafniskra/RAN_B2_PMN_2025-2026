@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projet B3 Tech - Mini-site de gestion de candidatures</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Sage Greens -->
+    <!-- Application Structure Plan: This single-page application presents a project brief for "TalentJump". The structure is a clean, single-column layout using cards to logically separate different sections of the brief (Context, Objectives, Deliverables, etc.). This linear, top-to-bottom flow is ideal for a document that needs to be read in a specific order. The design prioritizes readability and clarity. An interactive donut chart is used at the end to visually summarize the evaluation criteria, making the weighting immediately understandable. A new "Gemini API" powered section has been added to provide AI-driven assistance for students. -->
+    <!-- Visualization & Content Choices:
+        - Project Sections -> Goal: Inform/Organize -> Viz: A series of styled cards -> Interaction: None -> Justification: Breaks down a dense text document into manageable, visually distinct chunks, improving readability.
+        - Evaluation Criteria -> Goal: Inform/Compare -> Viz: Donut Chart -> Interaction: Hover for details -> Justification: Provides a quick, graphical representation of how the project will be graded, highlighting the importance of each part.
+        - Gemini Features -> Goal: Assist/Inspire -> Viz: Interactive buttons with result areas -> Interaction: Click to call Gemini API and display generated ideas -> Justification: Adds a dynamic, AI-powered tool to help students with brainstorming and project planning, enhancing the project brief's value.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdf4;
+            color: #3f3f46;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .content-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 2rem;
+            border: 1px solid #e5e5e5;
+            margin-bottom: 2rem;
+        }
+        .content-card h2 {
+            color: #16a34a;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #86efac;
+            padding-bottom: 0.5rem;
+        }
+        .content-card h3 {
+            color: #15803d;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .content-card ul {
+            list-style-type: disc;
+            list-style-position: inside;
+            padding-left: 0.5rem;
+        }
+        .content-card li {
+            margin-bottom: 0.5rem;
+        }
+         .code-block {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            display: inline-block;
+        }
+        .gemini-result-area {
+            background-color: #f0fdf4;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            min-height: 100px;
+            border: 1px dashed #86efac;
+        }
+        .gemini-result-area h4 {
+            color: #15803d;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        .gemini-result-area ul {
+            padding-left: 1rem;
+            margin-top: 0.5rem;
+        }
+        .gemini-button {
+            background-color: #22c55e;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .gemini-button:hover {
+            background-color: #16a34a;
+        }
+        .static-chart {
+            width: 100%;
+            max-width: 500px;
+            margin: 1rem auto;
+            padding: 1rem;
+        }
+        .bar-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        .bar-label {
+            width: 45%;
+            text-align: right;
+            padding-right: 1rem;
+            font-weight: 500;
+        }
+        .bar-container {
+            width: 55%;
+            background-color: #e7e5e4;
+            border-radius: 4px;
+            height: 24px;
+        }
+        .bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            color: white;
+            font-weight: 600;
+            padding-right: 0.5rem;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <header class="text-center mb-12">
+             <img src="https://www.ecole-pmn.fr/wp-content/uploads/2025/02/Logo_PMN_NOIR_RVB-1.webp" alt="Logo de l'école" class="mx-auto h-16 w-auto mb-6" onerror="this.onerror=null;this.src='https://placehold.co/200x80/fcf8f3/44403c?text=Logo';">
+            <h1 class="text-2xl font-semibold text-green-700">Projet de remise à niveau – B3 Tech</h1>
+            <p class="mt-2 text-4xl md:text-5xl font-bold text-slate-800 tracking-tight">Mini-site de gestion de candidatures</p>
+            <div class="mt-6 flex justify-center items-center space-x-6 text-gray-600">
+                <span><strong>Dates :</strong> Du 1 au 5 septembre 2025</span>
+                <span><strong>Durée :</strong> 5 jours</span>
+                <span><strong>Équipes :</strong> Travail en binômes</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="content-card">
+                <h2>Contexte</h2>
+                <p>L'entreprise fictive <strong>TalentJump</strong> est en pleine croissance et recrute activement des stagiaires et alternants. Claire, la responsable du recrutement, est débordée. Elle gère actuellement toutes les candidatures via sa boîte mail, ce qui entraîne des oublis et des pertes de temps.</p>
+                <p class="mt-4"><strong>Votre mission</strong> est de développer le prototype d'une application web interne qui lui permettra de centraliser et de gérer les candidatures de manière simple et efficace.</p>
+            </div>
+
+            <div class="content-card">
+                <h2>Objectif</h2>
+                <p>Ce projet vise à réactiver et consolider vos compétences fondamentales en développement web et en programmation orientée objet. L'objectif est de construire une application simple mais complète, en séparant clairement la partie présentation (HTML/CSS) de la partie logique métier (Java).</p>
+                <p class="mt-4">Le projet couvrira le cycle de vie complet d'une candidature :</p>
+                <ul>
+                    <li>Ajouter un nouveau candidat.</li>
+                    <li>Visualiser la liste de tous les candidats.</li>
+                    <li>Modifier le statut d'un candidat (ex: "En attente", "Entretien", "Refusé").</li>
+                    <li>Trier et filtrer les candidats pour retrouver une information rapidement.</li>
+                </ul>
+            </div>
+
+            <div class="content-card">
+                <h2>Livrables Attendus</h2>
+
+                <h3>1. Interface Web (Front-End Statique)</h3>
+                <p>Une interface claire, responsive et professionnelle.</p>
+                <ul>
+                    <li><span class="code-block">index.html</span> : Une page d'accueil présentant l'outil TalentJump.</li>
+                    <li><span class="code-block">candidats.html</span> : Une page affichant la liste des candidats. La présentation sous forme de cartes (cards) est encouragée pour un design moderne.</li>
+                    <li><span class="code-block">ajouter.html</span> : Un formulaire soigné pour saisir les informations d'un candidat : Prénom/Nom, Email, Poste visé, Compétences, Lien CV.</li>
+                </ul>
+
+                <h3>2. Traitement des données (Back-End Console)</h3>
+                <p>Une application en ligne de commande (console) codée en Java.</p>
+                <ul>
+                    <li><span class="code-block">Candidat.java</span> : Un modèle clair (attributs, constructeur, getters/setters).</li>
+                    <li><span class="code-block">GestionCandidats.java</span> : Contient la structure de données (<span class="code-block">ArrayList&lt;Candidat&gt;</span>) et implémente les méthodes de gestion (CRUD, tri, filtre).</li>
+                    <li><strong>Lien entre Java et Web</strong> : Le programme Java doit pouvoir générer un fichier HTML (ex: <span class="code-block">rapport_candidats.html</span>) qui affiche la liste à jour des candidats.</li>
+                </ul>
+
+                <h3>3. Documentation et Code</h3>
+                 <ul>
+                    <li>Un <strong>dépôt Git</strong> partagé par le binôme avec des commits réguliers et explicites.</li>
+                    <li>Un fichier <span class="code-block">README.md</span> complet (description, répartition des tâches, instructions d'exécution, choix de conception).</li>
+                </ul>
+
+                <h3>4. Soutenance Orale (15 minutes)</h3>
+                <p>Une démo live de 10 minutes suivie de 5 minutes de questions, montrant le code, l'exécution en console, la génération du fichier HTML et le résultat dans le navigateur.</p>
+            </div>
+
+             <div class="content-card">
+                <h2>Aide & Inspiration ✨</h2>
+                <p class="mb-6">Utilisez la puissance de l'IA pour vous aider à démarrer votre projet.</p>
+
+                <div class="space-y-6">
+                    <div>
+                        <h3>Idées de Fonctionnalités Bonus</h3>
+                        <p class="text-gray-600">Bloqué sur les fonctionnalités bonus ? Obtenez des suggestions créatives pour aller plus loin.</p>
+                    </div>
+                    <hr>
+                    <div>
+                        <h3>Inspiration pour le Design UI/UX</h3>
+                        <p class="text-gray-600">Obtenez des concepts de design pour présenter votre liste de candidats de manière professionnelle.</p>
+                    </div>
+                     <hr>
+                    <div>
+                        <h3>Planification des Tâches en Binôme</h3>
+                        <p class="text-gray-600">Recevez une proposition de répartition des tâches pour organiser efficacement votre travail d'équipe.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h2>Contraintes et Outils</h2>
+                <ul>
+                    <li><strong>Front-End</strong> : HTML5, CSS3. Aucun framework CSS (Bootstrap, Tailwind) ou JS n'est autorisé.</li>
+                    <li><strong>Back-End</strong> : Java (version 11 ou supérieure). Pas d'interface graphique (Swing, JavaFX) ni de serveur d'application (Tomcat).</li>
+                    <li><strong>Outils</strong> : Un IDE (IntelliJ, Eclipse, VS Code) et Git.</li>
+                    <li><strong>Stockage</strong> : En mémoire (<span class="code-block">ArrayList</span>). Pas de base de données.</li>
+                </ul>
+            </div>
+
+            <div class="content-card">
+                <h2>Bonus (pour aller plus loin)</h2>
+                <p>Si vous terminez en avance, voici quelques idées pour améliorer votre projet :</p>
+                <ul>
+                    <li>Suppression d'un candidat.</li>
+                    <li>Sauvegarde et chargement de la liste de candidats dans un fichier simple (ex: .json ou .csv).</li>
+                    <li>Utilisation d'une <span class="code-block">enum</span> en Java pour gérer le statut de la candidature.</li>
+                    <li>Ajout d'une fonctionnalité de recherche par mot-clé.</li>
+                    <li>Création d'une page de statistiques simples.</li>
+                </ul>
+            </div>
+
+            <div class="content-card text-center">
+                <h2>Critères d'évaluation</h2>
+                <p class="max-w-2xl mx-auto mb-6 text-gray-600">Votre projet sera évalué sur la base des fonctionnalités, de la qualité du code, du rendu de l'interface et de votre présentation.</p>
+                <div class="static-chart">
+                    <div class="bar-item">
+                        <span class="bar-label">Fonctionnalités Java</span>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: 40%; background-color: #16a34a;">40%</div>
+                        </div>
+                    </div>
+                    <div class="bar-item">
+                        <span class="bar-label">Qualité du code</span>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: 30%; background-color: #22c55e;">30%</div>
+                        </div>
+                    </div>
+                    <div class="bar-item">
+                        <span class="bar-label">Rendu HTML/CSS</span>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: 20%; background-color: #4ade80;">20%</div>
+                        </div>
+                    </div>
+                    <div class="bar-item">
+                        <span class="bar-label">Soutenance & Doc</span>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: 10%; background-color: #86efac;">10%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gemini API Integration
+            const bonusBtn = document.getElementById('generate-bonus-btn');
+            const designBtn = document.getElementById('generate-design-btn');
+            const tasksBtn = document.getElementById('generate-tasks-btn');
+
+            const bonusResultArea = document.getElementById('bonus-result');
+            const designResultArea = document.getElementById('design-result');
+            const tasksResultArea = document.getElementById('tasks-result');
+
+            const prompts = {
+                bonus: "Agis comme un chef de produit expérimenté. Pour un projet étudiant de mini-site de gestion de candidatures (Java/HTML/CSS), génère 3 idées de fonctionnalités bonus créatives et réalisables. Ne répète pas les idées suivantes : suppression, sauvegarde en fichier, enum pour statut, recherche, statistiques. Pour chaque idée, fournis un nom et une courte description. Formate ta réponse en HTML sous la forme d'une liste non ordonnée `<ul>`. Chaque élément de la liste `<li>` doit contenir un titre `<strong>` et la description qui suit.",
+                design: "Agis comme un UI/UX designer. Pour une page web affichant une liste de candidats sous forme de cartes, décris 3 concepts de design réalisables en pur HTML/CSS. Pour chaque concept, décris la disposition de la carte, les infos clés et une palette de couleurs. Formate ta réponse en HTML. Utilise un `<div>` pour chaque concept. Chaque `<div>` doit contenir un titre `<h4>` pour le nom du concept et une liste `<ul>` pour les détails.",
+                tasks: "Agis comme un chef de projet technique. Pour un projet de 5 jours en binôme (Développeur A, Développeur B) sur un site de gestion de candidatures (frontend statique HTML/CSS, backend console Java), propose une répartition des tâches équilibrée. Formate la réponse en HTML. Utilise des titres `<h4>` pour 'Développeur A (Focus Backend)', 'Développeur B (Focus Frontend)', et 'Tâches Communes', chacun suivi d'une liste `<ul>` détaillant les tâches."
+            };
+
+            const callGeminiAPI = async (prompt, resultElement, button) => {
+                resultElement.innerHTML = '<p class="text-center text-gray-500">Génération en cours...</p>';
+                button.disabled = true;
+                button.classList.add('opacity-50');
+
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                };
+
+                let retries = 3;
+                let delay = 1000;
+                while (retries > 0) {
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+
+                        const result = await response.json();
+                        const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                        if (text) {
+                            resultElement.innerHTML = text;
+                        } else {
+                            resultElement.innerHTML = '<p class="text-red-500">La réponse de l'API est vide. Veuillez réessayer.</p>';
+                        }
+
+                        button.disabled = false;
+                        button.classList.remove('opacity-50');
+                        return;
+
+                    } catch (error) {
+                        console.error('API Call Error:', error);
+                        retries--;
+                        if (retries === 0) {
+                             resultElement.innerHTML = `<p class="text-red-500">Erreur lors de l'appel à l'API après plusieurs tentatives. Veuillez vérifier la console.</p>`;
+                             button.disabled = false;
+                             button.classList.remove('opacity-50');
+                        } else {
+                            await new Promise(res => setTimeout(res, delay));
+                            delay *= 2;
+                        }
+                    }
+                }
+            };
+
+            bonusBtn.addEventListener('click', () => callGeminiAPI(prompts.bonus, bonusResultArea, bonusBtn));
+            designBtn.addEventListener('click', () => callGeminiAPI(prompts.design, designResultArea, designBtn));
+            tasksBtn.addEventListener('click', () => callGeminiAPI(prompts.tasks, tasksResultArea, tasksBtn));
+        });
+    </script>
+</body>
+</html>
+
