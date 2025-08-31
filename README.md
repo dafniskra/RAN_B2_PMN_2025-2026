@@ -6,9 +6,9 @@ Bienvenue dans cette semaine de remise à niveau ! L'objectif est de réactiver 
 
 Pour vous aider à préparer le projet, voici quelques cours de révision. Ils sont facultatifs mais fortement recommandés pour vous rafraîchir la mémoire.
 
- **[Introduction à l'Algorithmique](./Intro_algo.html)** : Révisez les concepts fondamentaux de la logique et de la résolution de problèmes.
- **[Introduction à Java](./Intro_Java.html)**: Consolidez vos bases en structuration de pages web.
- **[Introduction au HTML](./Intro_Html.html)**: Rafraîchissez vos connaissances en programmation orientée objet.
+- **[Introduction à l'Algorithmique](./Intro_algo.html)** : Révisez les concepts fondamentaux de la logique et de la résolution de problèmes.
+- **[Introduction à Java](./Intro_Java.html)**: Consolidez vos bases en structuration de pages web.
+- **[Introduction au HTML](./Intro_Html.html)**: Rafraîchissez vos connaissances en programmation orientée objet.
 
 ## Le Projet à Rendre
 
